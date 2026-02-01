@@ -360,9 +360,9 @@ async def handle_start_session(ws: WebSocketServerProtocol, msg: Dict[str, Any])
             await send_error(ws, "La sesión ya comenzó o terminó", {"state": session.state})
             return
 
-        if not all_ready(session):
-            await send_error(ws, "No todos están listos", {"players": session.to_room_state()["players"]})
-            return
+        #if not all_ready(session):
+        #    await send_error(ws, "No todos están listos", {"players": session.to_room_state()["players"]})
+        #    return
 
         # Arrancar el juego en background (sin bloquear el handler)
         asyncio.create_task(run_game(session))
