@@ -491,7 +491,7 @@ async def handler(ws: WebSocketServerProtocol) -> None:
 
 async def main() -> None:
     host = "0.0.0.0"
-     port = int(os.getenv("PORT", "8765"))
+    port = int(os.getenv("PORT", "8765"))
     print(f"WS server escuchando en ws://{host}:{port}")
     async with websockets.serve(handler, host, port):
         await asyncio.Future()  # run forever
