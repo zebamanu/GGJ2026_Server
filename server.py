@@ -179,6 +179,10 @@ def build_leaderboard(session: Session, round_points: Optional[Dict[str, int]] =
     return items
 
 
+import random
+
+CHARACTER_IDS = list(range(1))
+
 async def run_game(session: Session) -> None:
     session.state = "running"
     session.current_round = 0
@@ -193,6 +197,8 @@ async def run_game(session: Session) -> None:
         session.current_round = r
         session.answers[r] = {}
 
+        character_id = random.choice(CHARACTER_IDS)  # ✅ nuevo
+
         ends_at = now_ms() + session.round_time_sec * 1000
         await broadcast(session, {
             "type": "round_started",
@@ -200,11 +206,11 @@ async def run_game(session: Session) -> None:
             "round_id": r,
             "duration_sec": session.round_time_sec,
             "ends_at_ms": ends_at,
+            "character_id": character_id,  # ✅ nuevo
             "timestamp_ms": now_ms(),
         })
 
-        # Esperar a que termine el tiempo de ronda
-        await asyncio.sleep(session.round_time_sec)
+        await asyncio.sleep(session.round_time_sec * 5)
 
         # Calcular puntajes de ronda
         round_points = compute_round_points(session, r)
@@ -221,6 +227,7 @@ async def run_game(session: Session) -> None:
             "leaderboard": leaderboard,
             "timestamp_ms": now_ms(),
         })
+        await asyncio.sleep(2 )
 
     session.state = "ended"
     final_lb = build_leaderboard(session, round_points=None)
